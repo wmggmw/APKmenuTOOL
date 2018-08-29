@@ -1,4 +1,4 @@
-﻿# APKmenuTOOL - 安卓右键工具
+# APKmenuTOOL - 安卓右键工具
 
 ![](./doc/screenshot.png)
 
@@ -12,6 +12,7 @@
 1. Windows操作系统64位
 2. 需安装Java开发环境并配置环境变量
 3. 需安装Python并配置环境变量，支持Python3和Python2
+4. 需安装ADB并配置环境变量
 
 ### 二、安装和卸载说明
 #### 1、安装

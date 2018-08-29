@@ -943,6 +943,17 @@ fun_ret:
 	return iRetVal;
 }
 
+BOOL CheckAdb()
+{
+	CString strCmdLine("cmd /c adb version");
+	CStringA strOutPut = RunCmdAndOutput(strCmdLine);
+	int index = strOutPut.Find("不是内部或外部命令");
+	if (index != -1) {
+		return FALSE;
+	}
+	return TRUE;
+}
+
 //检查python是否配置和python版本
 int CheckPython()
 {
@@ -1816,10 +1827,10 @@ unsigned int __stdcall ThreadScreenCap(PVOID pM)
 	CString strScreenCapPath;
 	CString strConFileName;
 	CString pyFile;
-	//CString strAdbPath = _T("adb");
-	CString strAdbPath = _T("");
-	strAdbPath += szModulePath;
-	strAdbPath += _T("adb\\adb.exe");
+	CString strAdbPath = _T("adb");
+	//CString strAdbPath = _T("");
+	//strAdbPath += szModulePath;
+	//strAdbPath += _T("adb\\adb.exe");
 
 	strConFileName = szModulePath;
 	strConFileName += _T("config\\config.ini");
@@ -1830,11 +1841,21 @@ unsigned int __stdcall ThreadScreenCap(PVOID pM)
 	CString strFileName = plugData->strFilePath;
 	int index= strFileName.ReverseFind('\\');
 	CString strFilePath = strFileName.Left(index);
+	BOOL bAdbRet = CheckAdb();
+	if (!bAdbRet) {
+		strRet = _T("请在环境变量中配置adb路径!");
+		ShowTips(_T("网易易盾加固提醒您"), strRet);
+		if (plugData)
+			delete plugData;
+		return 0;
+	}
 	int bRet = CheckPython();
 	if (bRet == -1)
 	{
 		strRet = _T("请安装python，并配置pyhton到环境变量");
 		ShowTips(_T("网易易盾加固提醒您"), strRet);
+		if (plugData)
+			delete plugData;
 		return 0;
 	}
 	else if (bRet == 2)
@@ -1904,7 +1925,8 @@ unsigned int __stdcall ThreadScreenCap(PVOID pM)
 			strRet = _T("手机截图失败");
 		}
 	ShowTips(_T("网易易盾加固提醒您"), strRet);
-	
+	if (plugData)
+		delete plugData;
 	return 0;
 }
 
@@ -1913,10 +1935,10 @@ unsigned int __stdcall ThreadGetPhoneInfo(PVOID pM)
 {
 	CString strCmdLine;
 	CString strRet = _T("");
-	//CString strAdbPath = _T("adb");
-	CString strAdbPath = _T("");
-	strAdbPath += szModulePath;
-	strAdbPath += _T("adb\\adb.exe");
+	CString strAdbPath = _T("adb");
+	//CString strAdbPath = _T("");
+	//strAdbPath += szModulePath;
+	//strAdbPath += _T("adb\\adb.exe");
 	CString strLogFile;
 	CString pyFile;
 
@@ -1928,12 +1950,15 @@ unsigned int __stdcall ThreadGetPhoneInfo(PVOID pM)
 	CString strFileName = plugData->strFilePath;
 	strLogFile = strFileName;
 
-	/*BOOL bRet = CheckAdb();
-	if (!bRet)
+	BOOL bAdbRet = CheckAdb();
+	if (!bAdbRet)
 	{
 		strRet = _T("请在环境变量中配置adb路径!");
-		goto _SHOW_RESULT;
-	}*/
+		ShowTips(_T("网易易盾加固提醒您"), strRet);
+		if (plugData)
+			delete plugData;
+		return 0;
+	}
 	int bRet = CheckPython();
 	if (bRet == -1)
 	{
@@ -2072,16 +2097,16 @@ unsigned int __stdcall ThreadApkUninstall(PVOID pM)
 	TCHAR * pPtr = NULL;
 
 	//CString strConFileName;
-	//CString strAdbPath = _T("adb");
-	CString strAdbPath = _T("");
-	strAdbPath += szModulePath;
-	strAdbPath += _T("adb\\adb.exe");
-	//BOOL bRet = CheckAdb();
-	//if (!bRet)
-	///{
-	//	strLog = _T("请在环境变量中配置adb路径!");
-	//	goto _SHOW_RESULT;
-	//}
+	CString strAdbPath = _T("adb");
+	//CString strAdbPath = _T("");
+	//strAdbPath += szModulePath;
+	//strAdbPath += _T("adb\\adb.exe");
+	BOOL bAdbRet = CheckAdb();
+	if (!bAdbRet)
+	{
+		strLog = _T("请在环境变量中配置adb路径!");
+		goto _SHOW_RESULT;
+	}
 	int bRet = CheckPython();
 	if (bRet == -1)
 	{
@@ -2206,10 +2231,12 @@ unsigned int __stdcall ThreadApkInstall(PVOID pM)
 	CString strLog;
 	TCHAR * pPtr = NULL;
 
-	CString strAdbPath = _T("");
-	strAdbPath += szModulePath;
-	strAdbPath += _T("adb\\adb.exe");
-
+	CString strAdbPath = _T("adb");
+	BOOL bAdbRet = CheckAdb();
+	if (!bAdbRet) {
+		strLog = _T("请在环境变量中配置adb路径!");
+		goto _SHOW_RESULT;
+	}
 	int bRet = CheckPython();
 	if (bRet== -1)
 	{
@@ -2254,7 +2281,7 @@ unsigned int __stdcall ThreadApkInstall(PVOID pM)
 		strCmdLine = _T("cmd /c python \"");
 		strCmdLine += szModulePath;
 		strCmdLine += _T("python\\");
-		strCmdLine+=pyFile+_T("\" \"");
+		strCmdLine += pyFile+_T("\" \"");
 		strCmdLine += strAdbPath;
 		strCmdLine += _T("\" ");
 		strCmdLine += strReturn;
@@ -2387,11 +2414,12 @@ unsigned int __stdcall ThreadApkInstallfore(PVOID pM)
 	TCHAR * pPtr = NULL;
 
 	//CString strConFileName;
-	//CString strAdbPath = _T("adb");
-	CString strAdbPath = _T("");
-	strAdbPath += szModulePath;
-	strAdbPath += _T("adb\\adb.exe");
-	//BOOL bRet = CheckAdb();
+	CString strAdbPath = _T("adb");
+	BOOL bAdbRet = CheckAdb();
+	if (!bAdbRet) {
+		strLog = _T("请在环境变量中配置adb路径!");
+		goto _SHOW_RESULT;
+	}
 	int bRet = CheckPython();
 	if (bRet == -1)
 	{
