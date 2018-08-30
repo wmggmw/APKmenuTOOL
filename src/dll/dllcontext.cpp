@@ -251,17 +251,22 @@ HRESULT STDMETHODCALLTYPE Cdllcontext::InvokeCommand(THIS_
 			if (index == 1)
 			{
 				
-				filePath.Append(allFileName.front());
+				CString strFilePath(allFileName.front());
+				strFilePath.Replace(_T("\\"), _T("/"));
+				filePath.Append(strFilePath);
 			}
 			else
 			{
 			for (list<CString>::iterator itfile = allFileName.begin(); itfile != allFileName.end(); ++itfile)
 				{
-				filePath.Append(*itfile);
+				CString strPathTemp(*itfile);
+				strPathTemp.Replace(_T("\\"), _T("/"));
+				filePath.Append(strPathTemp);
 				filePath.Append(_T("\r\n"));
 				}
 			filePath.Delete(filePath.GetLength() - 2, 2);
 			}
+			//MessageBox(NULL, filePath, NULL, MB_OK);
 			HANDLE hThread;
 			ThreadData* plugData = new ThreadData;
 			plugData->strFilePath = filePath;
