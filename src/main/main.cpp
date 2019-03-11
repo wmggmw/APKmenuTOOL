@@ -47,7 +47,6 @@ BOOL CmainApp::InitInstance()
 
 	CWinApp::InitInstance();
 
-	AfxEnableControlContainer();
 
 	// 标准初始化
 	// 如果未使用这些功能并希望减小

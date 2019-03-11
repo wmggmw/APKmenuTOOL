@@ -1,6 +1,6 @@
 # APKmenuTOOL - 安卓右键工具
 
-![](./doc/screenshot.png)
+![](./screenshot.png)
 
 
 ## **安卓右键工具v1.2版本使用说明**
