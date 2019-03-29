@@ -6,7 +6,7 @@
 #include "dll.h"
 
 HINSTANCE  _hInstance;
-TCHAR szModulePath[MAX_PATH]; 
+TCHAR g_szModulePath[MAX_PATH]; 
 //NOTIFYICONDATA m_NotifyIconData;
 
 class CdllModule : public CAtlDllModuleT< CdllModule >
@@ -28,19 +28,19 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpRes
 {
 	_hInstance = hInstance;
 	//Tips = FALSE;
-	GetModuleFileName(hInstance, szModulePath, sizeof(szModulePath)/sizeof(TCHAR)); 
+	GetModuleFileName(hInstance, g_szModulePath, sizeof(g_szModulePath)/sizeof(TCHAR)); 
 	//(_tcsrchr(szModulePath, _T('//')))[1] = 0; //删除文件名，只获得路径
-	for (size_t i= wcslen(szModulePath)-1;i>=0;i--)
+	for (size_t i= wcslen(g_szModulePath)-1;i>=0;i--)
 	{
-		if (szModulePath[i] == _T('\\'))
+		if (g_szModulePath[i] == _T('\\'))
 		{
-			szModulePath[i+1]=_T('t');
-			szModulePath[i+2]=_T('o');
-			szModulePath[i+3]=_T('o');
-			szModulePath[i+4]=_T('l');
-			szModulePath[i+5]=_T('s');
-			szModulePath[i+6]=_T('\\');
-			szModulePath[i+7]= 0;
+			g_szModulePath[i+1]=_T('t');
+			g_szModulePath[i+2]=_T('o');
+			g_szModulePath[i+3]=_T('o');
+			g_szModulePath[i+4]=_T('l');
+			g_szModulePath[i+5]=_T('s');
+			g_szModulePath[i+6]=_T('\\');
+			g_szModulePath[i+7]= 0;
 			break;
 		}
 	}

@@ -103,7 +103,7 @@ HRESULT STDMETHODCALLTYPE Cdllcontext::QueryContextMenu(THIS_
 	static WCHAR szMenuText_19[] = L"自定义插件";
 	static WCHAR szMenuText_20[] = L"关于 v1.2";
 
-	strConFileName = szModulePath;
+	strConFileName = g_szModulePath;
 	strConFileName += _T("config\\config.ini"); 
 
 	TCHAR szTmp[2048] = { 0 };
