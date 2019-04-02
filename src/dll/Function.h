@@ -1077,8 +1077,9 @@ unsigned int __stdcall ThreadGetSigninfo(PVOID pM) {
 	strJavaHome = RunCmdAndOutput(strCmdLine);*/
 
 	BOOL bRet = GetKeytoolPath(strKeytoolPath);
-	if (!bRet)
-		strKeytoolPath = "";
+	if (bRet == FALSE) {
+		strKeytoolPath = "keytool.exe";
+	}
 	//MessageBox(NULL, CA2W(strKeytoolPath), NULL, NULL);
 	if (!fileType.CompareNoCase(_T(".apk"))) {
 		strUnZipPath.Replace(_T(".apk"), _T("_signinfo.txt"));
